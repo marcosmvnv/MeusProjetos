@@ -7,7 +7,7 @@ Class UYObject
 EndClass
 
 Method New() Class UYObject
-Return ::
+Return self
 
 Method cGetClassName() Class UYObject
 Return "UYOBJECT"

@@ -24,20 +24,68 @@ Class UYDaoAprovador From UYObject
 	Method New() Constructor
 	
 	//Lista Pedidos do Aprovador
-	Method ListaPedidos(oAprovador, oFilter)
+	Method ListaPedidos(oFilter)
 	
 	//Aprova Pedido de Compra
 	Method AprovarPedido(oPedido)
 	
 	//Reprova Pedido de Compra
 	Method ReprovarPedido(oPedido)
-	
+	//Retorna Objeto Aprovador com base no código de Usuario em parâmetro
+	Method GetAprovador(cCodUser)
+	//Bloquear Pedido de Venda
+	Method BloquearPedido(oPedido)
 EndClass
 
 Method New() Class UYDaoAprovador
 	_Super:New()
-Return ::
+Return Self
 
+
+/*/{Protheus.doc} GetAprovador
+//TODO Descrição auto-gerada.
+@author Marcos Vieira
+@since 20/11/2018
+@version 1.0
+@return ${return}, ${return_description}
+@param cCodUser, characters, description
+@type function
+/*/
+Method GetAprovador(cCodUser) Class UYDaoAprovador
+Local oAprovador
+Local aArea	:= GetArea()
+
+IF ValType(cCodUser) == "C"
+	
+	DbSelectArea("SAK")
+	SAK->(DbSetOrder(2))
+	IF SAK->(MsSeek(xFilial("SAK") + cCodUser))
+		oAprovador 	:= UYAprovador():New()
+		oAprovador:SetcId(SAK->AK_COD)
+		oAprovador:SetnMoeda(SAK->AK_MOEDA)
+		oAprovador:SetnLimite(SAK->AK_LIMITE)
+		oAprovador:SetcTipo(SAK->AK_TIPO)
+		oAprovador:SetcAproSup(SAK->AK_APROSUP)	
+		oAprovador:SetnLimMin(SAK->AK_LIMMIN)
+		oAprovador:SetnLimMax(SAK->AK_LIMMAX)			
+		oAprovador:GetoUsuario():SetcId(SAK->AK_USER)
+	EndIF	
+EndIF
+
+RestArea(aArea)
+Return oAprovador
+
+
+
+/*/{Protheus.doc} ListaPedidos
+//TODO Lista Pedidos de Venda
+@author Marcos Vieira
+@since 20/11/2018
+@version 1.0
+@return ${return}, ${return_description}
+@param oFilter, object, description
+@type function
+/*/
 Method ListaPedidos(oFilter) Class UYDaoAprovador
 Local oPedido
 Local aPedidos 	:= {}
@@ -70,13 +118,12 @@ BeginSql Alias cAlias
 			CR_DATALIB
 	FROM %Table:SCR% SCR
 	WHERE
-		SCR.%NotDel%	AND 		
-		SCR.CR_APROV = %Exp:oFilter:GetcIdSCR()% AND
-		SCR.CR_NUM	 	BETWEEN %Exp:oFilter:GetcIdSC7Ini()% 	AND %Exp:oFilter:GetcIdSC7Fim()% 	AND
-//		SCR.CR_GRUPO 	
-		SCR.CR_STATUS 	BETWEEN %Exp:oFilter:GetcStatusIni()% 	AND %Exp:oFilter:GetcStatusFim()% 	AND
-		SCR.CR_EMISSAO 	BETWEEN %Exp:oFilter:GetdEmissaoIni()% 	AND %Exp:oFilter:GetdEmissaoFim()% 	AND
-		SCR.CR_DATALIB 	BETWEEN %Exp:oFilter:GetdDataLibIni()% 	AND %Exp:oFilter:GetdDataLibFim()% 			
+		SCR.%NotDel%																								AND 		
+		SCR.CR_APROV = %Exp:oFilter:GetcIdSAK()% 																	AND
+		SCR.CR_NUM	 	BETWEEN %Exp:oFilter:GetcIdSC7Ini()% 			AND %Exp:oFilter:GetcIdSC7Fim()% 			AND 	
+		SCR.CR_STATUS 	BETWEEN %Exp:oFilter:GetcIniStatus()% 			AND %Exp:oFilter:GetcFimStatus()% 			AND
+		SCR.CR_EMISSAO 	BETWEEN %Exp: DToS(oFilter:GetdIniEmissao())% 	AND %Exp: DToS(oFilter:GetdFimEmissao())% 	AND
+		SCR.CR_DATALIB 	BETWEEN %Exp: DToS(oFilter:GetdIniDataLib())% 	AND %Exp: DToS(oFilter:GetdFimDataLib())% 			
 		
 EndSql
 
@@ -105,7 +152,16 @@ SCR->(RestArea(aAreaSCR))
 Return aPedidos
 
 
-Method AprovarPedido(oPedido)
+/*/{Protheus.doc} AprovarPedido
+//TODO Descrição auto-gerada.
+@author Marcos Vieira
+@since 21/11/2018
+@version 1.0
+@return ${return}, ${return_description}
+@param oPedido, object, description
+@type function
+/*/
+Method AprovarPedido(oPedido) Class UYDaoAprovador
 Local aArea		:= GetArea()
 Local aArea		:= GetArea()
 Local aAreaSCR	:= SCR->(GetArea())
@@ -134,11 +190,11 @@ SCR->(RestArea(aAreaSCR))
 RestArea(aArea)
 Return lRet
 
-Method ReprovarPedido(oPedido)
+Method ReprovarPedido(oPedido) Class UYDaoAprovador
 
 Return lRet
 
-Method BloquearPedido(oPedido)
+Method BloquearPedido(oPedido) Class UYDaoAprovador
 Local lRet 		:= .T.
 Local aAreaSCR	:= SCR->(GetArea())
 

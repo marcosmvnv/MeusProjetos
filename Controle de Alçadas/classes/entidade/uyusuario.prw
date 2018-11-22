@@ -3,6 +3,7 @@
 Class UYUsuario
 //	Atributos
 	Data cID
+	Data cUser
 	Data cSenha
 	Data cNome
 	Data cEmail
@@ -12,6 +13,7 @@ Class UYUsuario
 	Method New() Constructor
 //	Getters
 	Method GetcID() 	
+	Method GetcUser()
 	Method GetcSenha() 	
 	Method GetcNome() 	
 	Method GetcEmail()	
@@ -19,12 +21,15 @@ Class UYUsuario
 	Method GetcCargo() 
 //	Setters
 	Method SetcID(cID) 	
+	Method SetcUser(cUser)
 	Method SetcSenha(cSenha) 	
 	Method SetcNome(cNome) 	
 	Method SetcEmail(cEmail)	
 	Method SetcDpto(cDpto) 	
 	Method SetcCargo(cCargo) 	
 	
+	//Especificos
+	Method LoadUser()
 EndClass
 
 /*/{Protheus.doc} New
@@ -42,9 +47,12 @@ Return Self
 //Getters
 Method GetcID() Class UYUsuario
 Return ::cID
+
+Method GetcUser() Class UYUsuario
+Return ::cUser
  	
-//Method GetcSenha() Class UYUsuario
-//Return ::cSenha
+Method GetcSenha() Class UYUsuario
+Return ::cSenha
 
 Method GetcNome() Class UYUsuario
 Return ::cNome
@@ -61,8 +69,17 @@ Return ::cCargo
 //Setters
 
 Method SetcID(cID) 	Class UYUsuario
+
 IF ValType(cID) == "C"
 	::cID := cID
+	
+	Self:LoadUser()
+EndIF
+Return
+
+Method SetcUser(cUser) 	Class UYUsuario
+IF ValType(cUser) == "C"
+	::cUser := cUser
 EndIF
 Return
 
@@ -93,5 +110,22 @@ Return
 Method SetcCargo(cCargo) Class UYUsuario
 IF ValType(cCargo) == "C"
 	::cCargo := cCargo
+EndIF
+Return
+
+Method LoadUser() Class UYUsuario
+Local aArray := {}
+
+IF Self != Nil .And. !Empty(Self:cId)
+	PswOrder(1)
+	If PswSeek( Self:cId, .T. )  
+	   aArray := PswRet() // Retorna vetor com informações do usuário
+		Self:SetcUser(aArray[1][2])
+		Self:SetcSenha(aArray[1][3])
+		Self:SetcNome(aArray[1][4])
+		Self:SetcDpto(aArray[1][12])
+		Self:SetcCargo(aArray[1][13])
+		Self:SetcEmail(aArray[1][14])
+	EndIf
 EndIF
 Return

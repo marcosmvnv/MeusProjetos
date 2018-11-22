@@ -57,8 +57,10 @@ Local aArea    := GetArea()
 Local oObjProd := Nil
 Local cStatus  := ""
 Local cJson    := ""
+cCodProd := Self:aURLPARMS[1]
 
 ::SetContentType("application/json")
+
 ConOut("OBAOBA Tipo Variavel: "+ ValType(cCodProd))
 DbSelectArea("SB1")
 SB1->( DbSetOrder(1) )

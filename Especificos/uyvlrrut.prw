@@ -17,6 +17,7 @@ Local nTotal:= 0
 Local nFactor:= 0
 Local nDv 	:= 0
 Local nI	:= 0
+Local lAuto	:= isBlind()
 
 IF ValType(cRut) <> "C"
 	IF lAuto

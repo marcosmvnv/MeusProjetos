@@ -8,7 +8,7 @@ Static aTpValido := {"1","2","3","4","5","6","7","8","9","0","K"}
 @since 05/12/2018
 @version 1.0
 @return ${return}, ${return_description}
-@param cRut, characters, description
+@param cRut, characters, Numero de RUT a ser validado
 @type function
 /*/
 User Function UYVldRUT(cRut)
@@ -18,6 +18,7 @@ Local nFactor:= 0
 Local nDv 	:= 0
 Local nI	:= 0
 Local lAuto	:= isBlind()
+Local nCount:= 0
 
 IF ValType(cRut) <> "C"
 	IF lAuto
@@ -57,7 +58,7 @@ IF nCount > 0
 	Return .F.
 EndIF
 
-nDc 	:= substr(cRut,12, 1)
+nDc 	:= Val(substr(cRut,12, 1))
 cRut 	:= substr(cRut,1, 11)
 nFactor	:= 2
 

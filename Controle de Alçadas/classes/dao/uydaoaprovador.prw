@@ -138,10 +138,11 @@ While !(cAlias)->(EoF())
 	oPedido:SetcGrupo((cAlias)->CR_GRUPO)
 	oPedido:SetcStatus((cAlias)->CR_STATUS)
 	oPedido:SetcLegenda((cAlias)->CR_LEGENDA)
-	oPedido:SetcObs((cAlias)->CR_OBS)
+//	oPedido:SetcObs((cAlias)->CR_OBS)
 	oPedido:SetdDataLib((cAlias)->CR_DATALIB)
 	
 	AAdd(aPedidos, oPedido)	
+	(cAlias)->(DbSkip())
 End
 
 DbSelectArea(cAlias)

@@ -12,19 +12,23 @@ Static aTpValido := {"1","2","3","4","5","6","7","8","9","0","K"}
 @type function
 /*/
 User Function UYVldRUT(cRut)
-Local nDc	:= ""
-Local nTotal:= 0
-Local nFactor:= 0
-Local nDv 	:= 0
-Local nI	:= 0
-Local lAuto	:= isBlind()
-Local nCount:= 0
+Local nDc		:= ""
+Local nTotal	:= 0
+Local nFactor	:= 0
+Local nDv 		:= 0
+Local nI		:= 0
+Local lAuto		:= isBlind()
+Local nCount	:= 0
+Local aMsgSoluc	:= {}
+Local cMsgError	:= ""
 
 IF ValType(cRut) <> "C"
+	cMsgError := "Tipo de dato incorrecto"
 	IF lAuto
-		ConOut(FunName()+DToC(dDataBase)+Time()+"|Tipo de dado inválido")
+		ConOut(FunName()+DToC(dDataBase)+Time()+cMsgError)
 	Else
-		Alert("Tipo de dado inválido")
+		aAdd(aMsgSoluc, "El parametro desta function necesita ser del tipo Caracter")		
+		Help( , , "UYVldRUT_A", , cMsgError, 1, 0, NIL, NIL, NIL, NIL, NIL, aMsgSoluc)
 	EndIF
 	Return .F.
 EndIf
@@ -35,11 +39,17 @@ cRut := StrTran(cRut, ".","")
 cRut := StrTran(cRut, ",","")
 cRut := Alltrim(cRut)
 
+If Empty(cRut)
+	Return .F.
+EndIF
+
 If Len(cRut) <> 12
+	cMsgError := "Nª de RUT inválido"
 	IF lAuto
 		ConOut(FunName()+DToC(dDataBase)+Time()+"|Tamanho de RUT: "+ cRut + "Inválido")
 	Else
-		Alert("RUT Digitado inválido!")
+		aAdd(aMsgSoluc, "Verifique se el conteudo de la pregunta 'Tipo Documento' (A1_TP) en la carpeta 'Otros' esta como RUT y se el numero digitado esta correcto")		
+		Help( , , "UYVldRUT_B", , cMsgError, 1, 0, NIL, NIL, NIL, NIL, NIL, aMsgSoluc)
 	EndIF
 	Return .F.
 EndIF
@@ -51,10 +61,12 @@ For nI:= 1 To Len(cRut)
 Next
 
 IF nCount > 0
+	cMsgError := "Nª de RUT inválido"
 	IF lAuto
 		ConOut(FunName()+DToC(dDataBase)+Time()+"|RUT: "+ cRut + "Inválido")
 	Else
-		Alert("RUT inválido!")
+		aAdd(aMsgSoluc, "Verifique se el conteudo de la pregunta 'Tipo Documento' (A1_TP) en la carpeta 'Otros' esta como RUT y se el numero digitado esta correcto")		
+		Help( , , "UYVldRUT_C", , cMsgError, 1, 0, NIL, NIL, NIL, NIL, NIL, aMsgSoluc)
 	EndIF
 	Return .F.
 EndIF
@@ -81,10 +93,12 @@ ElseIF (nDv == 10)
 EndIf
 
 If (nDv <> nDc)
+	cMsgError := "Nª de RUT inválido"
 	IF lAuto
 		ConOut(FunName()+DToC(dDataBase)+Time()+"|RUT: "+ cRut + "Inválido")
 	Else
-		Alert("Nº RUT inválido!")
+		aAdd(aMsgSoluc, "Verifique se el conteudo de la pregunta 'Tipo Documento' (A1_TP) en la carpeta 'Otros' esta como RUT y se el numero digitado esta correcto")		
+		Help( , , "UYVldRUT_D", , cMsgError, 1, 0, NIL, NIL, NIL, NIL, NIL, aMsgSoluc)
 	EndIF
 	Return .F.
 EndIf

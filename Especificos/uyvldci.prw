@@ -36,7 +36,7 @@ EndIF
 cCI := StrTran(cCI, "-","")
 cCI := StrTran(cCI, ".","")
 cCI := StrTran(cCI, ",","")
-
+cCI := Alltrim(cCI)
 //Validando Tamanho do CI (poderá ser de 7 a 8 caracteres até o momento)
 IF Len(cCI) <> 8 
 	IF lAuto

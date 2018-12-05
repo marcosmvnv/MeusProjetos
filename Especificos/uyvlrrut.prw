@@ -33,12 +33,13 @@ EndIf
 cRut := StrTran(cRut, "-","")
 cRut := StrTran(cRut, ".","")
 cRut := StrTran(cRut, ",","")
+cRut := Alltrim(cRut)
 
 If Len(cRut) <> 12
 	IF lAuto
-		ConOut(FunName()+DToC(dDataBase)+Time()+"|Tamanho de cRut: "+ cRut + "Inválido")
+		ConOut(FunName()+DToC(dDataBase)+Time()+"|Tamanho de RUT: "+ cRut + "Inválido")
 	Else
-		Alert("cRut Digitado inválido!")
+		Alert("RUT Digitado inválido!")
 	EndIF
 	Return .F.
 EndIF
